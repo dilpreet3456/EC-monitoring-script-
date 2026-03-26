@@ -65,19 +65,26 @@ install_nginx_if_needed() {
 
 check_service() {
 
-    install_nginx_if_needed
+    # Check if systemd exists
+    if ! command -v systemctl >/dev/null 2>&1; then
+        log "systemctl not available (CI/CD container), skipping service check"
+        return
+    fi
 
+    # Install nginx if missing
+    if ! command -v nginx >/dev/null 2>&1; then
+        log "nginx not found. Installing..."
+        PKG_MANAGER=$(command -v dnf || command -v yum)
+        sudo $PKG_MANAGER install -y nginx || error_exit "Install failed"
+    fi
+
+    # Check service status
     if systemctl is-active --quiet "$SERVICE_NAME"; then
         log "$SERVICE_NAME is running"
     else
         log "$SERVICE_NAME is NOT running"
-
-        if [ "$DRY_RUN" = true ]; then
-            log "[DRY RUN] Would start $SERVICE_NAME"
-        else
-            sudo systemctl start "$SERVICE_NAME" || error_exit "Failed to start service"
-            log "$SERVICE_NAME started successfully"
-        fi
+        sudo systemctl start "$SERVICE_NAME" || error_exit "Failed to start service"
+        log "$SERVICE_NAME started successfully"
     fi
 }
 
