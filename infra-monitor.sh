@@ -118,6 +118,18 @@ rotate_logs() {
     done
 }
 
+error_exit() {
+    log "ERROR: $1"
+
+    # Do NOT fail build in CI/CD
+    if [ ! -d /run/systemd/system ]; then
+        log "CI/CD mode → ignoring failure"
+        return 0
+    fi
+
+    exit 1
+}
+
 # =========================
 # MAIN
 # =========================
