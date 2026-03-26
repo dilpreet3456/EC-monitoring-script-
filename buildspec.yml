@@ -12,9 +12,9 @@ phases:
       - chmod +x infra-monitor.sh
 
   build:
-    commands:
-      - echo "Running script"
-      - ./infra-monitor.sh
+  commands:
+    - chmod +x infra-monitor.sh
+    - ./infra-monitor.sh || true
 
 post_build:
   commands:
