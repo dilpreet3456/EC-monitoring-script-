@@ -65,10 +65,10 @@ install_nginx_if_needed() {
 
 check_service() {
 
-    # Check if systemd exists
-    if ! command -v systemctl >/dev/null 2>&1; then
-        log "systemctl not available (CI/CD container), skipping service check"
-        return
+    # Detect CI/CD (no systemd)
+    if [ ! -d /run/systemd/system ]; then
+        log "CI/CD environment detected → skipping service management"
+        return 0
     fi
 
     # Install nginx if missing
