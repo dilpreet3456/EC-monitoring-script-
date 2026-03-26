@@ -11,7 +11,7 @@ phases:
       - echo "Setting permissions"
       - chmod +x infra-monitor.sh
 
-  build:
+ build:
   commands:
     - chmod +x infra-monitor.sh
     - ./infra-monitor.sh || true
