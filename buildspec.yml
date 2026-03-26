@@ -17,14 +17,14 @@ phases:
       - ./infra-monitor.sh
 
   post_build:
-    commands:
-      - echo "Checking logs"
-      - cat infra_monitor.log || echo "No log file"
+  commands:
+    - echo "Checking logs"
+    - cat infra_monitor.log || echo "No log file"
 
-      - |
-        if grep -q "ERROR" infra_monitor.log; then
-          echo "Build failed"
-          exit 1
-        else
-          echo "Build success"
-        fi
+    - |
+      if grep -q "ERROR" infra_monitor.log 2>/dev/null; then
+        echo "Build failed"
+        exit 1
+      else
+        echo "Build success"
+      fi
