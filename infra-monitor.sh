@@ -137,10 +137,10 @@ main() {
 
     log "===== Script Started ====="
 
-    check_instance_health
-    check_service
-    check_disk
-    rotate_logs
+    check_instance_health || true
+    check_service || true
+    check_disk || true
+    rotate_logs || true
 
     log "===== Script Completed ====="
 }
