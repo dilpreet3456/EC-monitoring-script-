@@ -1,0 +1,30 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - echo "Installing dependencies"
+      - yum install -y nginx
+
+  pre_build:
+    commands:
+      - echo "Setting permissions"
+      - chmod +x infra-monitor.sh
+
+  build:
+    commands:
+      - echo "Running script"
+      - ./infra-monitor.sh
+
+  post_build:
+    commands:
+      - echo "Checking logs"
+      - cat infra_monitor.log || echo "No log file"
+
+      - |
+        if grep -q "ERROR" infra_monitor.log; then
+          echo "Build failed"
+          exit 1
+        else
+          echo "Build success"
+        fi
